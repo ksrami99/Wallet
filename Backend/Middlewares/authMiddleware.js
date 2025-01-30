@@ -11,13 +11,16 @@ const authMiddleware = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.username = decoded.username;
+        req.userId = decoded.userId;
+        console.log(decoded);
         next();
     } catch (error) {
         res.josn({
             message: "authorization Failed!",
         });
     }
+
+    console.log(req.userId);
 };
 
 
