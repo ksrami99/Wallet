@@ -131,13 +131,39 @@ router.put("/", authMiddleware, async (req, res) => {
 
     await User.updateOne({ username: req.username }, req.body);
 
-
     res.json({
         message: "Updated Successfully",
     });
 });
 
+router.get("/bulk", async (req, res) => {
+    const filter = req.body.filter || "";
 
+    const users = await User.find({
+        $or: [
+            {
+                firstname: {
+                    $regex: filter,
+                    $options: "i"
+                },
+            },
+            {
+                lastname: {
+                    $regex: filter,
+                    $options: "i"
+                },
+            },
+        ]
+    });
 
+    res.json({
+        user: users.map((user) => ({
+            username: user.username,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            _id : user._id
+        }))
+    })
+});
 
 module.exports = router;
