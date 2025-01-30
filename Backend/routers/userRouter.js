@@ -82,6 +82,7 @@ router.post("/signin", async (req, res) => {
     const userExists = await User.findOne({
         username: req.body.username,
     });
+    // console.log(userExists);
 
     if (!userExists) {
         res.status(411).json({
@@ -90,10 +91,6 @@ router.post("/signin", async (req, res) => {
         return;
     }
 
-    const token = jwt.sign(
-        { username: req.body.username },
-        process.env.JWT_SECRET
-    );
 
     // bcrypt.compare(
     //     req.body.password,
@@ -104,12 +101,18 @@ router.post("/signin", async (req, res) => {
     //     }
     // );
 
+    const userId = userExists._id;
+
+
     if (req.body.password !== userExists.password) {
         res.status(411).json({
             message: "Invalid Inputs",
         });
         return;
     }
+
+    const token = jwt.sign({ userId : userId}, process.env.JWT_SECRET);
+
     res.status(200).json({
         message: "Login Success!",
         token: `Bearer ${token}`,
