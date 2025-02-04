@@ -4,6 +4,7 @@ const cors = require('cors');
 const connection = require('./db')
 const rootRouter = require('./routers/index');
 
+
 const PORT = process.env.PORT;
 
 const app = express();
